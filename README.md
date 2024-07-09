@@ -83,6 +83,65 @@ This Python code defines a custom dataset class (`CustomDataset`) using PyTorch'
 - Ensure the CSV file (`csv_file`) has the appropriate format and is accessible to the script.
 - The dataset class facilitates data loading, transformation, and indexing, essential for training neural networks in PyTorch.
 
+# Summary of  Model Inference
+
+## Overview
+
+This Python script performs inference using a trained LSTM model (`LSTMModel`) to predict a class label based on input data.
+
+## Libraries Used
+
+- `torch`: PyTorch library for tensor computations and neural networks.
+- `model`: Assumes the existence of a module `model` containing `LSTMModel`.
+- `torch.cuda`: PyTorch module for CUDA support (if available).
+- `torch.tensor`: Constructs PyTorch tensors.
+- `torch.no_grad`: Context manager to disable gradient computation for inference.
+- `print`: Standard output function for displaying results.
+
+## Model Inference Setup
+
+### Model Initialization
+- **Parameters**: 
+  - `input_size`: Dimensionality of input features.
+  - `hidden_size`: Number of units in the LSTM hidden state.
+  - `output_size`: Number of output classes.
+
+- **Functionality**:
+  - Initializes an instance of `LSTMModel` for inference with specified `input_size`, `hidden_size`, and `output_size`.
+  - Loads the model's trained weights (`saved_model_lstm.pth`) using `torch.load()` and `model_inference.load_state_dict()`.
+
+### Device Configuration
+- **Device Selection**: 
+  - Determines the device (GPU or CPU) available using `torch.cuda.is_available()`.
+  - Moves the model (`model_inference`) to the selected device using `.to(device)`.
+
+### Input Data Preparation
+- **Test Input**: 
+  - Prepares a test input tensor (`test_input`) containing a single sample (`[[150, 19]]`) of input features, converted to `torch.float32` and moved to the selected device (`device`).
+
+### Model Evaluation
+- **Evaluation Mode**: 
+  - Sets the model to evaluation mode using `model_inference.eval()`.
+  - Disables gradient computation during inference using `torch.no_grad()`.
+
+### Inference and Prediction
+- **Forward Pass**: 
+  - Performs a forward pass through the model with the test input (`test_input`) to obtain predicted probabilities (`predicted_probs`) for each class.
+  - Computes the predicted class label (`predicted_labels`) by selecting the class with the highest probability using `torch.max()`.
+
+### Output
+- **Print Statement**: 
+  - Displays the predicted class label (`predicted_labels.item()`) as the output of the inference process.
+
+## Usage
+- This script demonstrates how to load a pretrained LSTM model, perform inference on a single input sample, and obtain the predicted class label.
+- Suitable for applications requiring predictive modeling with sequential data using LSTM networks in PyTorch.
+
+## Notes
+- Ensure the existence of the `model` module with `LSTMModel` implemented and compatible with the provided input and output sizes.
+- Adjust `test_input` according to the expected input format of the LSTM model (`input_size` should match the number of features).
+  
+This summary provides an overview of how the provided Python script performs inference using a pretrained LSTM model in PyTorch, including model initialization, input data preparation, model evaluation, and prediction.
 
 
 # Summary of Train.py
