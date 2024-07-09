@@ -194,4 +194,66 @@ This Python script trains and evaluates a neural network model (LSTM) using PyTo
 - The code assumes the availability of CUDA-enabled GPU for acceleration if `torch.cuda.is_available()` evaluates to `True`.
 - It demonstrates typical steps in training and evaluating a neural network model using PyTorch, including data loading, model definition, training loop, evaluation, and result visualization.
 
+  
+# Summary of Models
+
+## Overview
+
+This Python script defines two different models using PyTorch's `nn.Module`:
+
+1. **MLPModel**:
+   - Multilayer Perceptron model with two fully connected (linear) layers followed by ReLU activation and softmax output.
+   - Suitable for classification tasks where the input data does not have a sequential relationship.
+
+2. **LSTMModel**:
+   - Long Short-Term Memory (LSTM) model consisting of an LSTM layer followed by a linear layer and softmax output.
+   - Designed for sequential data where the order of input elements matters, such as time series or natural language processing tasks.
+
+## Libraries Used
+
+- `torch`: PyTorch library for tensor computations and neural networks.
+- `torch.nn`: PyTorch's neural network module for defining layers and models.
+- `torch.optim`: PyTorch module for optimization algorithms.
+- `torch.utils.data`: PyTorch utilities for handling datasets and data loading.
+- `matplotlib.pyplot`: Library for plotting graphs and visualizations.
+- `pandas`: Library for data manipulation and analysis.
+
+## Models Defined
+
+### MLPModel
+
+- **Constructor (`__init__`)**:
+  - Initializes two fully connected layers (`fc1`, `fc2`) with ReLU activation (`relu`) and softmax activation (`softmax`).
+
+- **Forward Method (`forward`)**:
+  - Defines the forward pass of the model:
+    - Applies the first linear transformation (`fc1`).
+    - Applies ReLU activation.
+    - Applies the second linear transformation (`fc2`).
+    - Applies softmax activation to output probabilities across classes.
+
+### LSTMModel
+
+- **Constructor (`__init__`)**:
+  - Initializes an LSTM layer (`lstm`) with `batch_first=True` to accept input tensors with batch size as the first dimension.
+  - Defines a fully connected layer (`fc`) and softmax activation (`softmax`).
+
+- **Forward Method (`forward`)**:
+  - Defines the forward pass of the LSTM model:
+    - Processes the input tensor (`x`) through the LSTM layer (`lstm`).
+    - Applies a linear transformation (`fc`) to the LSTM output.
+    - Applies softmax activation to obtain class probabilities.
+
+## Usage
+
+- Use `MLPModel` for non-sequential data tasks such as basic classification where order does not matter.
+- Use `LSTMModel` for sequential data tasks such as time series prediction or natural language processing where the order of input elements is important.
+
+## Notes
+
+- Adjust `input_size`, `hidden_size`, and `output_size` parameters according to the specific requirements of your task and input data dimensions.
+- Ensure compatibility of input data shapes (`batch_size`, `sequence_length`, `feature_dimensions`) with the defined models.
+- These models assume standard classification outputs; adjust `output_size` for tasks with different numbers of classes.
+
+
 
