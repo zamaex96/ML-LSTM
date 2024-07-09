@@ -1,5 +1,39 @@
 Simple LSTM model which is trained on time-series dataset composed of two features and two outputs.
 
+# Summary of Split-dataset
+
+## Overview
+This Python script prepares a dataset (`dataset.csv`) for training and testing by splitting it into training and testing sets using scikit-learn's `train_test_split` function. It then saves the split datasets into separate CSV files (`train_dataset.csv` and `test_dataset.csv`).
+
+## Libraries Used
+- `pandas`: Data manipulation and analysis library.
+- `sklearn.model_selection`: Module from scikit-learn for splitting data into training and testing sets.
+
+## Steps
+
+1. **Read Data**: Reads the dataset from the file path `'dataset.csv'` using `pd.read_csv()`.
+
+2. **Split Data**:
+   - Splits the dataset into features (`X`) and target (`y`).
+   - Uses `train_test_split(X, y, test_size=0.3, random_state=42)` to split the data:
+     - `X_train`, `X_test`: Training and testing features.
+     - `y_train`, `y_test`: Training and testing targets.
+     - `test_size=0.3`: Sets the proportion of the dataset to include in the test split to 30%.
+     - `random_state=42`: Sets the random seed for reproducibility.
+
+3. **Concatenate DataFrames**:
+   - Combines training features (`X_train`) with training target (`y_train`) into `train_data` using `pd.concat([X_train, y_train], axis=1)`.
+   - Combines testing features (`X_test`) with testing target (`y_test`) into `test_data` using `pd.concat([X_test, y_test], axis=1)`.
+
+4. **Save Data**:
+   - Saves `train_data` to `'train_dataset.csv'` and `test_data` to `'test_dataset.csv'` using `to_csv()` with `index=False` to exclude row indices from being saved.
+
+## Notes
+- The script assumes the existence of `'dataset.csv'` in the current directory and saves the split datasets accordingly.
+- It demonstrates how to split a dataset into training and testing sets for machine learning tasks using scikit-learn and manage data with pandas.
+
+
+
 # Summary of Train.py
 
 ## Overview
