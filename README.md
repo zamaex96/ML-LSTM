@@ -32,6 +32,57 @@ This Python script prepares a dataset (`dataset.csv`) for training and testing b
 - The script assumes the existence of `'dataset.csv'` in the current directory and saves the split datasets accordingly.
 - It demonstrates how to split a dataset into training and testing sets for machine learning tasks using scikit-learn and manage data with pandas.
 
+# Summary of DataLoader
+
+## Overview
+
+This Python code defines a custom dataset class (`CustomDataset`) using PyTorch's `Dataset` class. The dataset is initialized with data from a CSV file (`csv_file`). Each data sample consists of two features and one class label.
+
+## Libraries Used
+
+- `torch`: PyTorch library for tensor computations and neural networks.
+- `torch.nn`: PyTorch's neural network module.
+- `torch.optim`: PyTorch's optimization module.
+- `torch.utils.data`: PyTorch's data loading utilities.
+- `matplotlib.pyplot`: Matplotlib for plotting.
+- `pandas`: Data manipulation library.
+
+## Custom Dataset Class (`CustomDataset`)
+
+### Initialization (`__init__` method)
+- **Parameters**: 
+  - `csv_file`: Path to the CSV file containing the dataset.
+  - `transform`: Optional transformation to be applied on features (e.g., data augmentation).
+
+- **Functionality**:
+  - Loads the dataset from `csv_file` using `pd.read_csv()` into `self.data`.
+  - Initializes with an optional `transform` parameter to preprocess features.
+
+### Length (`__len__` method)
+- **Functionality**:
+  - Returns the number of samples in the dataset (`len(self.data)`).
+
+### Get Item (`__getitem__` method)
+- **Parameters**:
+  - `idx`: Index of the sample to retrieve.
+
+- **Functionality**:
+  - Retrieves features (`features`) and class label (`class_name`) for the sample at index `idx`.
+  - Converts features into a PyTorch tensor (`torch.tensor`) of type `torch.float32`.
+  - Converts class label into a PyTorch tensor of type `torch.long`.
+  - Applies an optional transformation (`self.transform`) on features if provided.
+
+- **Returns**:
+  - A tuple containing `features` and `class_name`.
+
+## Usage
+- The `CustomDataset` class is used to encapsulate and preprocess data from a CSV file for machine learning tasks in PyTorch.
+- Suitable for tasks like supervised learning where data needs to be loaded, preprocessed, and transformed into PyTorch tensors.
+
+## Notes
+- Ensure the CSV file (`csv_file`) has the appropriate format and is accessible to the script.
+- The dataset class facilitates data loading, transformation, and indexing, essential for training neural networks in PyTorch.
+
 
 
 # Summary of Train.py
