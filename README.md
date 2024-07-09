@@ -255,5 +255,52 @@ This Python script defines two different models using PyTorch's `nn.Module`:
 - Ensure compatibility of input data shapes (`batch_size`, `sequence_length`, `feature_dimensions`) with the defined models.
 - These models assume standard classification outputs; adjust `output_size` for tasks with different numbers of classes.
 
+# Summary of Confusion Matrix
+
+## Overview
+
+This Python script performs inference using an LSTM model (`LSTMModel`) trained on a saved model (`saved_model_lstm.pth`). It then computes and plots a confusion matrix and accuracy score using the test dataset (`test_dataset.csv`).
+
+## Libraries Used
+
+- `torch`: PyTorch library for tensor computations and neural networks.
+- `torch.nn`: PyTorch's neural network module for defining layers and models.
+- `torch.utils.data`: PyTorch utilities for handling datasets and data loading.
+- `pandas`: Library for data manipulation and analysis.
+- `seaborn`: Statistical data visualization library based on Matplotlib.
+- `matplotlib.pyplot`: Library for plotting graphs and visualizations.
+- `sklearn.metrics`: Scikit-learn library for performance metrics such as confusion matrix and accuracy score.
+
+## Models and Data Loading
+
+- **LSTMModel**: Defined in the `model.py` file, loaded from `saved_model_lstm.pth`.
+- **CustomDataset**: Defined in `data_loader.py`, loads the test dataset (`test_dataset.csv`) using `torch.utils.data.Dataset` and `torch.utils.data.DataLoader`.
+
+## Functionality
+
+1. **Loading Model**:
+   - Loads the `LSTMModel` from a saved state dictionary (`saved_model_lstm.pth`) onto the CPU or GPU based on availability.
+
+2. **Loading Test Dataset**:
+   - Uses `CustomDataset` to load the test dataset (`test_dataset.csv`) into a `DataLoader` for batch processing.
+
+3. **Inference**:
+   - Sets the model to evaluation mode (`model_inference.eval()`).
+   - Iterates over batches of data from `test_data_loader`, performs forward pass through the model, and collects predictions.
+
+4. **Confusion Matrix and Accuracy**:
+   - Computes the confusion matrix and accuracy score using `sklearn.metrics.confusion_matrix` and `sklearn.metrics.accuracy_score`.
+   - Plots the confusion matrix using `seaborn.heatmap` with annotated values and class labels (`["bad", "good"]`).
+
+## Output
+
+- Displays the accuracy score in percentage.
+- Shows a heatmap of the confusion matrix with predicted versus true labels.
+
+## Notes
+
+- Ensure the `LSTMModel` and `CustomDataset` classes are correctly defined in their respective files (`model.py` and `data_loader.py`).
+- Adjust `class_names` and other parameters as per specific dataset classes and requirements.
+
 
 
