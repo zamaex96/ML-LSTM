@@ -20,12 +20,12 @@ def plot_confusion_matrix(true_labels, predicted_labels, class_names):
     plt.ylabel('True')
     plt.show()
 
-input_size = 2
-hidden_size = 4
-output_size = 2
+input_size = 2  #number of features
+hidden_size = 4   # layers
+output_size = 2    # number of classes
 
 model_inference = LSTMModel(input_size, hidden_size, output_size)
-model_inference.load_state_dict(torch.load('saved_model_lstm.pth',map_location=torch.device('cpu')))
+model_inference.load_state_dict(torch.load('saved_model_lstm.pth',map_location=torch.device('cpu'))) # "saved_model_lstm" is the pre-trained model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_inference.to(device)
 
@@ -48,7 +48,7 @@ with torch.no_grad():
         predicted_labels.extend(predicted.cpu().numpy())
 
 
-class_names = ["bad", 'good']
+class_names = ["X", 'Y']
 
 plot_confusion_matrix(true_labels, predicted_labels, class_names)
 
