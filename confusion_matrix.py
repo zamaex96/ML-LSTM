@@ -82,6 +82,6 @@ with torch.no_grad():
         true_labels.extend(labels.cpu().numpy())
         predicted_labels.extend(predicted.cpu().numpy())
 
-class_names = ["c1", "c2", "c3", "c4"]
+class_names = ["c1", "c2"]
 
 plot_confusion_matrix(true_labels, predicted_labels, class_names)
