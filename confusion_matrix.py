@@ -46,25 +46,24 @@ def plot_confusion_matrix(true_labels, predicted_labels, class_names):
     plt.show()
 
 # Model parameters
-input_size = 1201
-hidden_size = 12
-output_size = 17
-num_layers = 8
-n_head = 4
+input_size = 2
+hidden_size = 4
+output_size = 2
 
 # Paths to training and testing data
 # model_path = r"C:\Users\ML\Models\LSTM.pth"
-# model_path = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Models\SpatialAttentionModel_TSNormOnly.pth"
-model_path = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Models\Transformer1D_TSNormOnly.pth"
+# model_path = r"C:\Users\ML\Models\Only.pth"
+model_path = r"C:\Users\ML\Models\LSTM.pth"
 
 #model_inference = RNNModel(input_size, hidden_size, num_layers, output_size)
 #model_inference = SpatialAttentionModel(input_size, hidden_size, output_size, num_layers)
-model_inference = TransformerModel(input_size, hidden_size, output_size, num_layers=num_layers, nhead=n_head)
+#model_inference = TransformerModel(input_size, hidden_size, output_size, num_layers=num_layers, nhead=n_head)
+model_inference = LSTMModel(self, input_size, hidden_size, output_size)
 model_inference.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'), weights_only=True))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_inference.to(device)
 
-test_csv_path = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\Datatset\TimeSeries\Norm\test_norm_only.csv"
+test_csv_path = r"C:\Users\Datatset\test.csv"
 test_dataset = CustomDataset(test_csv_path)
 test_data_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
