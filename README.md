@@ -302,5 +302,12 @@ This Python script performs inference using an LSTM model (`LSTMModel`) trained 
 - Ensure the `LSTMModel` and `CustomDataset` classes are correctly defined in their respective files (`model.py` and `data_loader.py`).
 - Adjust `class_names` and other parameters as per specific dataset classes and requirements.
 
+<div align="center">
+  <a href="https://maazsalman.org/">
+    <img width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="gh" />
+  </a>
+  <p> Explore More! 🚀</p>
+</div>
+
 
 
