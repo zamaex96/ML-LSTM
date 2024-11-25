@@ -63,3 +63,21 @@ class RNNModel(nn.Module):
 
         return out
 
+# Define 1D CNN Model
+class CNN1DModel(nn.Module):
+    def __init__(self, input_size, num_classes):
+        super(CNN1DModel, self).__init__()
+        self.conv1 = nn.Conv1d(in_channels=1, out_channels=16, kernel_size=3, padding=1)  # Convolution layer
+        self.conv2 = nn.Conv1d(in_channels=16, out_channels=32, kernel_size=3, padding=1)
+        self.pool = nn.MaxPool1d(2)  # Pooling layer
+        self.fc1 = nn.Linear(32 * (input_size // 2 // 2), 128)  # Fully connected layer
+        self.fc2 = nn.Linear(128, num_classes)  # Output layer
+
+    def forward(self, x):
+        x = self.pool(torch.relu(self.conv1(x)))  # Conv1 + ReLU + Pooling
+        x = self.pool(torch.relu(self.conv2(x)))  # Conv2 + ReLU + Pooling
+        x = x.view(x.size(0), -1)  # Flatten the output
+        x = torch.relu(self.fc1(x))  # Fully connected layer with ReLU
+        x = self.fc2(x)  # Output layer
+        return x
+
