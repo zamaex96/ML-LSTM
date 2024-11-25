@@ -87,7 +87,7 @@ This Python code defines a custom dataset class (`CustomDataset`) using PyTorch'
 
 ## Overview
 
-This Python script performs inference using a trained LSTM model (`LSTMModel`) to predict a class label based on input data.
+This Python script performs inference using a trained LSTM, CNN, RNN, and MLP model (`LSTMModel`) to predict a class label based on input data.
 
 ## Libraries Used
 
