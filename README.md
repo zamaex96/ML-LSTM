@@ -194,6 +194,78 @@ This Python script trains and evaluates a neural network model (LSTM) using PyTo
 - The code assumes the availability of CUDA-enabled GPU for acceleration if `torch.cuda.is_available()` evaluates to `True`.
 - It demonstrates typical steps in training and evaluating a neural network model using PyTorch, including data loading, model definition, training loop, evaluation, and result visualization.
 
+# Training and Evaluation Summary of train_CNN
+
+This code trains and evaluates a **1D Convolutional Neural Network (1D-CNN)** for a classification task with 17 output classes using a time series dataset. The process involves data loading, model training, evaluation, and result visualization.
+
+---
+
+## Key Components
+
+### Model and Training Setup
+- **Model:** `CNN1DModel` - A custom 1D-CNN model with:
+  - Input size: `200` features.
+  - Output size: `17` classes.
+- **Loss Function:** CrossEntropyLoss.
+- **Optimizer:** Stochastic Gradient Descent (SGD) with a learning rate of `0.001`.
+- **Device:** GPU if available; otherwise, CPU.
+
+### Data
+- **Training Data:** Loaded from a CSV file (`train.csv`).
+- **Testing Data:** Loaded from a CSV file (`test.csv`).
+- **Custom Dataset Class:** `CustomDataset`, handles loading and preprocessing.
+
+### Training Configuration
+- **Epochs:** `1000`.
+- **Batch Size:** `12`.
+
+---
+
+## Workflow
+
+### Training Loop
+1. **Forward Pass:** Inputs are passed through the model.
+2. **Loss Calculation:** Loss is computed using CrossEntropyLoss.
+3. **Backward Pass:** Gradients are calculated and used to update model parameters.
+4. **Metrics Calculation:** Accuracy is computed for training and testing data.
+
+### Evaluation Loop
+- The model is evaluated on test data after each epoch to compute:
+  - Testing loss.
+  - Testing accuracy.
+
+### Output Generation
+1. **Model Saving:** The trained model is saved in `.pth` format.
+2. **Training Logs:** Loss and accuracy values are saved as a CSV file.
+3. **Visualization:**
+   - Loss vs. Epochs (Training and Testing).
+   - Accuracy vs. Epochs (Training and Testing).
+   - Plots are saved as both `.png` and `.pdf`.
+
+---
+
+## Output Locations
+- **Model Directory:** `C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Models`
+- **CSV Directory:** `C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\CSV`
+- **Plots Directory:** `C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Plots`
+
+---
+
+## Visualization
+Two plots are generated to visualize the performance of the model:
+1. **Loss Plot:** Displays the training and testing loss over epochs.
+2. **Accuracy Plot:** Shows training and testing accuracy over epochs.
+
+The plots are saved in high-resolution PNG and PDF formats for better readability.
+
+---
+
+## Example Output
+```plaintext
+Epoch [5/1000], Train Loss: 1.2345, Test Loss: 1.4567, Train Accuracy: 85.67%, Test Accuracy: 84.23%
+Model saved at C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Models\1D-CNN_TS.pth
+Training data saved at C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\CSV\1D-CNN_TS.csv
+Plots saved at C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Plots\1D-CNN_TS.png and C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Plots\1D-CNN_TS.pdf
   
 # Summary of Models
 
