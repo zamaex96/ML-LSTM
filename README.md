@@ -266,7 +266,73 @@ Epoch [5/1000], Train Loss: 1.2345, Test Loss: 1.4567, Train Accuracy: 85.67%, T
 Model saved at C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Models\1D-CNN_TS.pth
 Training data saved at C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\CSV\1D-CNN_TS.csv
 Plots saved at C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Plots\1D-CNN_TS.png and C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Plots\1D-CNN_TS.pdf
-```  
+```
+# Training and Evaluation Summary for MLP Model
+
+This code trains and evaluates a **Multi-Layer Perceptron (MLP)** model for classification, leveraging PyTorch. The process includes data preprocessing, model training, testing, saving results, and visualizing performance.
+
+---
+
+## Key Components
+
+### Model Details
+- **Model:** `MLPModel`
+  - Input size: `12` features.
+  - Hidden size: `11` units.
+  - Output size: `17` classes.
+- **Device:** GPU (if available) or CPU.
+
+### Training Configuration
+- **Loss Function:** CrossEntropyLoss.
+- **Optimizer:** Stochastic Gradient Descent (SGD) with a learning rate of `0.001`.
+- **Epochs:** `100`.
+- **Batch Size:** `12`.
+
+### Data
+- **Training Data:** Loaded from `train.csv`.
+- **Testing Data:** Loaded from `test.csv`.
+- **Custom Dataset Class:** `CustomDataset` (handles data loading and preprocessing).
+
+---
+
+## Workflow
+
+### Training Phase
+1. Forward pass through the MLP model.
+2. Compute the loss using CrossEntropyLoss.
+3. Perform backpropagation to calculate gradients.
+4. Update model parameters using SGD.
+5. Track training loss and accuracy.
+
+### Testing Phase
+- Evaluate the model on test data after every epoch.
+- Compute test loss and accuracy without updating model weights.
+
+### Output
+1. **Model State:** Saved as `saved_model_mlp.pth`.
+2. **Training Logs:** Loss and accuracy values saved as `train_loss_mlp.csv`.
+3. **Visualization:**
+   - Loss vs. Epochs (Training and Testing).
+   - Accuracy vs. Epochs (Training and Testing).
+
+---
+
+## Visualization
+The code generates a plot with two subplots:
+1. **Loss Plot:** Training and testing loss over epochs.
+2. **Accuracy Plot:** Training and testing accuracy over epochs.
+
+The plots provide insights into model performance during training.
+
+---
+
+## Example Output
+```plaintext
+Epoch [5/100], Train Loss: 0.5678, Test Loss: 0.6543, Train Accuracy: 85.67%, Test Accuracy: 84.12%
+Model saved at saved_model_mlp.pth
+Training data saved at train_loss_mlp.csv
+```
+
 # Summary of Models
 
 ## Overview
