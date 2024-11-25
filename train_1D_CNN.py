@@ -27,8 +27,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.001)
 
 # Paths to training and testing data
-train_csv_path = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\Datatset\TimeSeries\Split\train.csv"
-test_csv_path = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\Datatset\TimeSeries\Split\test.csv"
+train_csv_path = r"C:\train.csv"
+test_csv_path = r"C:\test.csv"
 
 # Create datasets and dataloaders
 train_dataset = CustomDataset(train_csv_path)
@@ -108,11 +108,11 @@ for epoch in range(epochs):
             f'Epoch [{epoch + 1}/{epochs}], Train Loss: {epoch_train_loss:.4f}, Test Loss: {epoch_test_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, Test Accuracy: {test_accuracy:.2f}%')
 
 # Specify output folder for saving the model, CSV file, and plots
-output_folder1 = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Models" # Replace with desired path
+output_folder1 = r"C:\Models" # Replace with desired path
 os.makedirs(output_folder1, exist_ok=True)  # Create folder if it doesn't exist
-output_folder2 = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\CSV"  # Replace with desired path
+output_folder2 = r"C:\CSV"  # Replace with desired path
 os.makedirs(output_folder2, exist_ok=True)  # Create folder if it doesn't exist
-output_folder3 = r"C:\Users\BU\Documents\BULabProjects\DUI Detection\ML\Plots"  # Replace with desired path
+output_folder3 = r"C:\Plots"  # Replace with desired path
 os.makedirs(output_folder3, exist_ok=True)  # Create folder if it doesn't exist
 
 # Save the model state
