@@ -332,7 +332,77 @@ Epoch [5/100], Train Loss: 0.5678, Test Loss: 0.6543, Train Accuracy: 85.67%, Te
 Model saved at saved_model_mlp.pth
 Training data saved at train_loss_mlp.csv
 ```
+# Training and Evaluation Summary for RNN Model
 
+This code trains and evaluates an **RNN-based model** for multi-class classification using PyTorch. It includes loading datasets, training the model, evaluating performance, saving outputs, and visualizing results.
+
+---
+
+## Key Components
+
+### Model Details
+- **Model:** `RNNModel`
+  - Input size: `12` features.
+  - Hidden size: `11` units.
+  - Number of layers: `8`.
+  - Output size: `17` classes.
+- **Device:** GPU (if available) or CPU.
+
+### Training Configuration
+- **Loss Function:** CrossEntropyLoss.
+- **Optimizer:** Adam, learning rate `0.001`.
+- **Epochs:** `100`.
+- **Batch Size:** `12`.
+
+### Data
+- **Training Data:** `train.csv`.
+- **Testing Data:** `test.csv`.
+- **Dataset Class:** `CustomDataset` (handles data loading and preprocessing).
+
+---
+
+## Workflow
+
+### Training Phase
+1. Forward pass through the RNN model.
+2. Compute loss using CrossEntropyLoss.
+3. Backpropagation to compute gradients.
+4. Update parameters using the Adam optimizer.
+5. Track training loss and accuracy.
+
+### Testing Phase
+- Evaluate the model after each epoch without updating parameters.
+- Compute test loss and accuracy.
+
+---
+
+## Outputs
+
+1. **Model Checkpoint:** Saved as a `.pth` file including:
+   - Model state dictionary.
+   - Hyperparameters such as input size, hidden size, learning rate, etc.
+   - Path: `C:\Models\RNN_TSN.pth`.
+
+2. **Training Logs:** 
+   - Loss and accuracy values saved as a CSV file.
+   - Path: `C:\CSV\RNN_TSN.csv`.
+
+3. **Visualization:**
+   - **Loss Plot:** Training and testing loss over epochs.
+   - **Accuracy Plot:** Training and testing accuracy over epochs.
+   - Plots saved as:
+     - PNG: `C:\Plots\RNN_TSN.png`.
+     - PDF: `C:\Plots\RNN_TSN.pdf`.
+
+---
+
+## Example Output
+```plaintext
+Epoch [10/100], Train Loss: 0.1234, Train Accuracy: 92.50%, Test Loss: 0.1345, Test Accuracy: 91.00%
+Model saved at C:\Models\RNN_TSN.pth
+Training data saved at C:\CSV\RNN_TSN.csv
+Plots saved at C:\Plots\RNN_TSN.png and C:\Plots\RNN_TSN.pdf
+```
 # Summary of Models
 
 ## Overview
