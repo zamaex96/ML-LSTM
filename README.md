@@ -144,7 +144,7 @@ This Python script performs inference using a trained LSTM, CNN, RNN, and MLP mo
 This summary provides an overview of how the provided Python script performs inference using a pretrained LSTM model in PyTorch, including model initialization, input data preparation, model evaluation, and prediction.
 
 
-# Summary of Train.py
+# Summary of Train_LSTM.py
 
 ## Overview
 This Python script trains and evaluates a neural network model (LSTM) using PyTorch on a custom dataset. It includes data loading, model definition, training loop, evaluation, and visualization of training and testing metrics (loss and accuracy).
