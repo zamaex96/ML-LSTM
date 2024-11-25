@@ -463,6 +463,57 @@ This Python script defines two different models using PyTorch's `nn.Module`:
 - Ensure compatibility of input data shapes (`batch_size`, `sequence_length`, `feature_dimensions`) with the defined models.
 - These models assume standard classification outputs; adjust `output_size` for tasks with different numbers of classes.
 
+#### **1. RNN Model (`RNNModel`)**
+
+- **Purpose**: Designed for sequential data, capturing temporal relationships.
+- **Key Components**:
+  - **Input Dimensions**:
+    - Input can be either 2D (`batch_size, input_size`) or 3D (`batch_size, seq_length, input_size`).
+    - Automatically adds a time-step dimension if input is 2D.
+  - **Layers**:
+    - `nn.RNN`: Recurrent layer for processing sequences.
+    - `nn.Linear`: Fully connected layer for producing outputs.
+  - **Forward Propagation**:
+    - Takes the last hidden state for classification (sequence to label task).
+
+#### **2. 1D CNN Model (`CNN1DModel`)**
+
+- **Purpose**: Designed for extracting features from temporal or 1D spatial data using convolutional layers.
+- **Key Components**:
+  - **Input Dimensions**:
+    - Input must be 3D (`batch_size, channels, input_length`), where `channels=1` for single feature per timestep.
+  - **Layers**:
+    - **Convolutional Layers**:
+      - Two layers (`Conv1d`) with kernel size 3 and padding 1 for feature extraction.
+    - **Pooling**:
+      - Max pooling (`MaxPool1d`) after each convolution layer to reduce dimensions.
+    - **Fully Connected Layers**:
+      - `fc1`: Reduces flattened feature size to 128.
+      - `fc2`: Maps to the number of output classes.
+  - **Forward Propagation**:
+    - Extracts features via convolution and pooling.
+    - Flattens features and applies fully connected layers for output.
+
+---
+
+### Comparison
+
+| **Aspect**         | **RNN Model**                          | **1D CNN Model**                    |
+|---------------------|----------------------------------------|-------------------------------------|
+| **Primary Use**     | Sequential or temporal data            | Feature extraction in 1D signals    |
+| **Key Layers**      | RNN, Linear                            | Conv1d, MaxPool1d, Linear           |
+| **Handling Sequence** | Processes sequentially, maintains temporal order | Uses convolution to capture local patterns |
+| **Output**          | Uses the last hidden state for classification | Flattened feature vector processed by FC layers |
+
+---
+
+### Implementation Notes
+
+- For **RNNModel**, input should be 2D (`batch_size, input_size`) or 3D (`batch_size, seq_length, input_size`).
+- For **CNN1DModel**, ensure input shape is `(batch_size, 1, input_length)`.
+- Both models can handle batch processing for efficient training.
+
+  
 # Summary of Confusion Matrix
 
 ## Overview
