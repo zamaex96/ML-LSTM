@@ -62,6 +62,7 @@ model_inference = LSTMModel(self, input_size, hidden_size, output_size)
 model_inference.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'), weights_only=True))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_inference.to(device)
+print(f"Using device: {device}")
 
 test_csv_path = r"C:\Users\Datatset\test.csv"
 test_dataset = CustomDataset(test_csv_path)
