@@ -12,8 +12,8 @@ model_name = "1D-CNN"
 ext="TS"
 
 # Model parameters
-input_size = 200  # Number of input features (length of each sample)
-output_size = 17  # Number of output classes
+input_size = 8  # Number of input features (length of each sample)
+output_size = 4  # Number of output classes
 
 # Instantiate the 1D CNN model
 model = CNN1DModel(input_size, output_size)
