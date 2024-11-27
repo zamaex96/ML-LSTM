@@ -7,9 +7,9 @@ import pandas as pd
 from model import *
 from data_loader import *
 
-input_size = 2
+input_size = 8
 hidden_size = 4
-output_size = 2
+output_size = 4
 
 
 # MLPModel
