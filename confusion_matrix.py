@@ -46,9 +46,9 @@ def plot_confusion_matrix(true_labels, predicted_labels, class_names):
     plt.show()
 
 # Model parameters
-input_size = 2
+input_size = 8
 hidden_size = 4
-output_size = 2
+output_size = 4
 
 # Paths to training and testing data
 # model_path = r"C:\Users\ML\Models\LSTM.pth"
@@ -82,6 +82,6 @@ with torch.no_grad():
         true_labels.extend(labels.cpu().numpy())
         predicted_labels.extend(predicted.cpu().numpy())
 
-class_names = ["c1", "c2"]
+class_names = ["C1", "C2", "C3", "C4"]
 
 plot_confusion_matrix(true_labels, predicted_labels, class_names)
