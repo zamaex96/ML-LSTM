@@ -26,13 +26,9 @@ test_csv_path = r"C:\test.csv"
 
 # Model parameters
 input_size = 8
-hidden_size = 12
+hidden_size = 4
 output_size = 4
-num_layers = 8
-n_head = 2
-cnn_channels = 64
-lstm_hidden_size = 32
-lstm_num_layers = 1   # Reduced number of LSTM layers for less complexity
+
 # Change batch size here
 batch_size = 12  # Change this value to your desired batch size
 epochs = 1000
@@ -67,7 +63,7 @@ def plot_confusion_matrix(true_labels, predicted_labels, class_names):
     plt.show()
 
 
-model_inference = RNNModel(input_size, hidden_size, num_layers, output_size)
+model_inference = LSTMModel(input_size, hidden_size, output_size)
 checkpoint = torch.load(model_path, map_location=torch.device('cpu'),weights_only=True)
 model_inference.load_state_dict(checkpoint['model_state_dict'])
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -126,7 +122,7 @@ print(f"F1 Score: {f1:.2f}%")
 
 # Save metrics to text file
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_folder2 = r"C:\BU Lab Assets\BULabProjects\DUI Detection\ML\Metrics"
+output_folder2 = r"C:\Metrics"
 os.makedirs(output_folder2, exist_ok=True)
 metrics_filename = os.path.join(output_folder2, f"model_metrics_{model_name}_{ext}_{timestamp}.txt")
 
