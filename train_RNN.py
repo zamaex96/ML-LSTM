@@ -13,9 +13,9 @@ model_name = "RNN"
 ext="TSN"
 
 # Model parameters
-input_size = 12
+input_size = 8
 hidden_size = 11
-output_size = 17
+output_size = 4
 num_layers = 8
 num_epochs=100
 learning_Rate=0.001
