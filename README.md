@@ -697,6 +697,87 @@ This Python script performs inference using an LSTM model (`LSTMModel`) trained 
    - Computes the confusion matrix and accuracy score using `sklearn.metrics.confusion_matrix` and `sklearn.metrics.accuracy_score`.
    - Plots the confusion matrix using `seaborn.heatmap` with annotated values and class labels (`["bad", "good"]`).
 
+### Explanation of Metrics Calculation and Saving
+
+The provided code evaluates model performance using various metrics and saves the results to a text file for documentation purposes. Below is a detailed breakdown of the script:
+
+#### **Accuracy Calculation**
+- **Overall Accuracy**: Percentage of correctly predicted samples over the total number of samples.
+  ```python
+  accuracy = 100 * correct / total
+  print(f"\nOverall Accuracy: {accuracy:.2f}%")
+  ```
+
+- **Per-Class Accuracy**: Calculates the accuracy for each class using the confusion matrix.
+  ```python
+  cm = confusion_matrix(true_labels, predicted_labels)
+  for i, class_name in enumerate(class_names):
+      class_correct = cm[i, i]
+      class_total = cm[i].sum()
+      class_acc = class_correct / class_total * 100
+      print(f"{class_name}: {class_acc:.2f}%")
+  ```
+
+#### **Metrics Calculation**
+Metrics like precision, recall, and F1-score are computed using **scikit-learn**:
+- **Accuracy**: The ratio of correctly predicted samples over total samples.
+- **Precision**: The ability of the model to avoid false positives, calculated per class and averaged (macro).
+- **Recall**: The ability of the model to find all relevant samples, calculated per class and averaged (macro).
+- **F1-Score**: The harmonic mean of precision and recall.
+  ```python
+  accuracy = accuracy_score(true_labels, predicted_labels) * 100
+  precision = precision_score(true_labels, predicted_labels, average='macro', zero_division=0) * 100
+  recall = recall_score(true_labels, predicted_labels, average='macro', zero_division=0) * 100
+  f1 = f1_score(true_labels, predicted_labels, average='macro', zero_division=0) * 100
+  ```
+
+#### **Saving Metrics to a Text File**
+- The script saves all calculated metrics and detailed per-class accuracy to a timestamped file.
+- It ensures the output directory exists and creates the file with the following content:
+  ```python
+  os.makedirs(output_folder2, exist_ok=True)
+  metrics_filename = os.path.join(output_folder2, f"model_metrics_{model_name}_{ext}_{timestamp}.txt")
+
+  with open(metrics_filename, 'w') as f:
+      f.write(f"Model: {model_name}\n")
+      f.write(f"Detail: {ext}\n")
+      f.write(f"Number of Classes: {output_size}\n\n")
+      f.write(f"Overall Accuracy: {accuracy:.2f}%\n")
+      f.write(f"Precision (macro): {precision:.2f}%\n")
+      f.write(f"Recall (macro): {recall:.2f}%\n")
+      f.write(f"F1 Score (macro): {f1:.2f}%\n\n")
+      f.write("Per-class Accuracy:\n")
+      for i, class_name in enumerate(class_names):
+          class_correct = cm[i, i]
+          class_total = cm[i].sum()
+          class_acc = class_correct / class_total * 100
+          f.write(f"{class_name}: {class_acc:.2f}%\n")
+  ```
+
+#### **Metrics File Example**
+The saved text file will look like this:
+```
+Model: MyModel
+Detail: Experiment_01
+Number of Classes: 5
+
+Overall Accuracy: 92.30%
+Precision (macro): 90.50%
+Recall (macro): 91.80%
+F1 Score (macro): 91.00%
+
+Per-class Accuracy:
+Class_A: 95.00%
+Class_B: 89.50%
+Class_C: 92.00%
+Class_D: 90.00%
+Class_E: 93.50%
+```
+
+#### **File Management**
+- Ensures files are uniquely identified with a timestamp for traceability.
+- The metrics are stored in the specified directory, making it easy to organize results from multiple experiments.
+  
 ## Output
 
 - Displays the accuracy score in percentage.
