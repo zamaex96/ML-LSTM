@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 import matplotlib.pyplot as plt
 import pandas as pd
-number_of_features=4 # change the number_of_features according to the data-set
+number_of_features=8 # change the number_of_features according to the data-set
 class CustomDataset(Dataset):
     def __init__(self, csv_file, transform=None):
         self.data = pd.read_csv(csv_file)
