@@ -8,9 +8,9 @@ from model import MLPModel  # Ensure MLPModel is imported from your model.py
 from data_loader import CustomDataset  # Ensure CustomDataset is imported
 
 # Define model parameters
-input_size = 12  # Number of input features
+input_size = 8  # Number of input features
 hidden_size = 11  # Number of hidden units
-output_size = 17   # Number of output classes
+output_size = 4   # Number of output classes
 
 # Instantiate the MLPModel
 model = MLPModel(input_size, hidden_size, output_size)
