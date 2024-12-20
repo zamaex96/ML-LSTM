@@ -788,6 +788,86 @@ Class_E: 93.50%
 - Ensure the `LSTMModel` and `CustomDataset` classes are correctly defined in their respective files (`model.py` and `data_loader.py`).
 - Adjust `class_names` and other parameters as per specific dataset classes and requirements.
 
+# ModelLoader
+### Explanation of the Modules
+
+#### 1. **InceptionBlock Class**
+The `InceptionBlock` implements a single block from the Inception architecture, but adapted for 1D convolutions. It consists of parallel convolutional paths with different kernel sizes and a max-pooling branch, followed by batch normalization, ReLU activation, and dropout.
+
+- **Parallel Convolution Layers**: 
+  - There are 3 parallel convolution layers, each with a different kernel size (`9`, `19`, and `39`). These layers are designed to capture different spatial features in the input data, with varying receptive fields.
+  - **Padding** is applied based on kernel size (`kernel_size // 2`) to maintain the input length.
+  - **BatchNorm1d** normalizes the output of each convolution layer.
+  - **ReLU Activation** introduces non-linearity.
+  - **Dropout** is applied to avoid overfitting by randomly zeroing some of the activations during training.
+
+- **MaxPool Branch**:
+  - A 1D max-pooling operation with kernel size `3` and stride `1` is applied. It helps reduce the dimensionality of the data while retaining important features.
+  - A 1D convolution with a kernel size of `1` is applied to reduce the number of channels in the output, followed by batch normalization, ReLU, and dropout.
+
+- **Concatenation**:
+  - The outputs of the parallel convolutions and the max-pooling branch are concatenated along the channel dimension. This is a key feature of the Inception architecture, which merges multiple types of feature extraction.
+
+- **Batch Normalization, ReLU, and Dropout**:
+  - After concatenating the outputs, the resulting tensor is passed through a batch normalization layer to normalize the features, followed by a ReLU activation function and a dropout layer for regularization.
+
+---
+
+#### 2. **InceptionTime Class**
+The `InceptionTime` class implements the complete model with multiple Inception blocks for time-series classification, utilizing multiple inception blocks with residual connections, global average pooling, and a fully connected classifier.
+
+- **Initial Convolution Layer (`conv1`)**:
+  - This is the first convolutional layer applied to the input time-series data, transforming it into a feature map. The kernel size is `1`, which does not modify the temporal dimension, but it learns the spatial features across the input channels.
+  - It is followed by batch normalization, ReLU activation, and dropout for regularization.
+
+- **Inception Blocks (`inception_blocks`)**:
+  - The `InceptionTime` model consists of multiple `InceptionBlock` layers, organized in a list. The number of inception blocks is determined by the `num_blocks` parameter.
+  - **Residual Connections**: Every third inception block is followed by a shortcut connection, adding the input of that block to the output. This helps preserve the initial features and avoids vanishing gradients by allowing gradients to flow directly through the shortcut connections.
+
+- **Global Average Pooling**:
+  - After the inception blocks, a **Global Average Pooling** layer is used, which reduces the feature map from `(batch_size, channels, length)` to `(batch_size, channels)` by averaging the values in the temporal dimension. This helps reduce the spatial dimension and serves as a form of dimensionality reduction before the final classification layer.
+
+- **Fully Connected Classifier (`classifier`)**:
+  - The output of the global average pooling is passed through a fully connected layer, which maps the features to a lower-dimensional space (using `inception_channels // 2`).
+  - The classifier consists of:
+    - **Linear Layer**: A fully connected layer that reduces the number of features from `inception_channels` to `inception_channels // 2`.
+    - **BatchNorm1d**: Normalization layer for the output.
+    - **ReLU Activation**: Non-linearity.
+    - **Dropout**: Regularization to reduce overfitting.
+    - **Final Linear Layer**: This layer maps the output to the number of classes (`num_classes`), producing the final classification scores.
+
+- **Shortcut Connections**:
+  - The model uses shortcut connections every third inception block. A shortcut is created by passing the output of the previous layer through a convolutional layer (`Conv1d`) to match the output size of the current block. The result is added back to the current block output, allowing the model to maintain important features and improve gradient flow during training.
+
+- **Weight Initialization**:
+  - The `apply` method is used to apply custom weight initialization to the layers:
+    - **Convolutional layers**: Initialized using Kaiming (He) initialization, which is effective for layers with ReLU activation.
+    - **Batch Normalization layers**: Initialized with `1` for weights and `0` for biases.
+    - **Linear layers**: Initialized using Kaiming initialization for weights and `0` for biases.
+
+---
+
+#### 3. **CustomDataset Class**
+The `CustomDataset` class is a subclass of `torch.utils.data.Dataset` and is used to handle data loading from a CSV file for training. It preprocesses the data into the format expected by PyTorch models.
+
+- **Initialization**:
+  - The `__init__` method reads the CSV file using `pandas.read_csv` and splits the data into features and labels. The features are stored in `self.features`, and the labels in `self.labels`. Each row of the dataset represents a single data point, with the last column being the label.
+
+- **Length**:
+  - The `__len__` method returns the total number of samples in the dataset. This is required by PyTorch's `DataLoader` for batching the data.
+
+- **Get Item**:
+  - The `__getitem__` method fetches a single sample by index `idx`. It converts the features and labels from numpy arrays to PyTorch tensors:
+    - **Features**: Converted into a `FloatTensor` to ensure they are treated as continuous data (e.g., float values).
+    - **Label**: Converted into a `LongTensor` to represent integer labels, which are typically used for classification tasks.
+
+---
+
+### Summary
+- The **InceptionBlock** uses multiple parallel convolution layers with different kernel sizes and a max-pooling branch to extract features at different scales. It concatenates their outputs and applies batch normalization, activation, and dropout.
+- **InceptionTime** stacks multiple **InceptionBlocks** and incorporates shortcut connections for better gradient flow and feature preservation, followed by global average pooling and a fully connected classifier.
+- **CustomDataset** facilitates loading time-series data from a CSV file into PyTorch by converting it into tensors suitable for training.
+
 <div align="center">
   <a href="https://maazsalman.org/">
     <img width="70" src="click-svgrepo-com.svg" alt="gh" />
