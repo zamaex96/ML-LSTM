@@ -868,6 +868,243 @@ The `CustomDataset` class is a subclass of `torch.utils.data.Dataset` and is use
 - **InceptionTime** stacks multiple **InceptionBlocks** and incorporates shortcut connections for better gradient flow and feature preservation, followed by global average pooling and a fully connected classifier.
 - **CustomDataset** facilitates loading time-series data from a CSV file into PyTorch by converting it into tensors suitable for training.
 
+# Train Inception Time Model
+This code demonstrates how to train and evaluate an `InceptionTime` model for time-series classification using PyTorch. Below is a step-by-step explanation of the entire process:
+
+---
+
+### 1. **Model Parameters and Setup**
+```python
+model_name = "InceptionTime"
+ext = "TS"
+
+# Model parameters
+input_size = 10001  # number of features/columns
+num_blocks = 6  # Number of InceptionTime blocks
+output_size = 9  # labels/target variables
+batch_Size = 32
+num_epochs = 200
+learning_Rate = 0.01
+```
+- **Model Parameters**: These parameters define the architecture and training configuration.
+  - `input_size`: Number of input features per sample (10001 features in this case).
+  - `num_blocks`: Number of Inception blocks in the `InceptionTime` model.
+  - `output_size`: Number of classes (9 classes for classification).
+  - `batch_Size`: Number of samples processed together in one training step (32 in this case).
+  - `num_epochs`: Total number of epochs (200 epochs).
+  - `learning_Rate`: The learning rate for the optimizer (0.01).
+
+---
+
+### 2. **InceptionTime Model Initialization**
+```python
+model = InceptionTime(input_size, output_size, num_blocks)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+print(f"Using device: {device}")
+```
+- **InceptionTime Model**: The `InceptionTime` model is instantiated using the provided parameters (`input_size`, `output_size`, and `num_blocks`).
+- **Device Selection**: The model is moved to the available computing device (`cuda` for GPU or `cpu` for CPU).
+- **Model to Device**: `model.to(device)` moves the model to the selected device.
+
+---
+
+### 3. **Loss Function and Optimizer**
+```python
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.AdamW(
+    model.parameters(),
+    lr=learning_Rate,
+    weight_decay=0.001
+)
+```
+- **Loss Function**: `CrossEntropyLoss` is used as the criterion because it is suitable for multi-class classification.
+- **Optimizer**: The `AdamW` optimizer is used, which is an adaptive learning rate optimizer with weight decay (L2 regularization).
+  - `learning_Rate`: The learning rate for the optimizer (0.01).
+  - `weight_decay`: Regularization to prevent overfitting.
+
+---
+
+### 4. **Learning Rate Scheduler**
+```python
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer,
+    mode='min',
+    factor=0.1,
+    patience=10,
+    min_lr=1e-6
+)
+```
+- **Learning Rate Scheduler**: The `ReduceLROnPlateau` scheduler reduces the learning rate by a factor of 0.1 if the validation loss does not improve for `patience` epochs. The minimum learning rate is set to `1e-6`.
+
+---
+
+### 5. **Dataset Loading**
+```python
+train_csv_path = r"C:\train.csv"
+test_csv_path = r"C:\test.csv"
+
+train_dataset = CustomDataset(train_csv_path)
+test_dataset = CustomDataset(test_csv_path)
+
+train_data_loader = DataLoader(train_dataset, batch_size=batch_Size, shuffle=True)
+test_data_loader = DataLoader(test_dataset, batch_size=batch_Size, shuffle=False)
+```
+- **Paths**: The paths to the training and testing CSV files are specified (`train_csv_path` and `test_csv_path`).
+- **CustomDataset**: A custom `Dataset` class (`CustomDataset`) is used to load the CSV data into a PyTorch-compatible format. The dataset is expected to load both features and labels.
+- **DataLoader**: The `DataLoader` is used to load the dataset in batches (`batch_Size = 32`), with the training data being shuffled.
+
+---
+
+### 6. **Training Loop**
+```python
+train_loss_values = []
+test_loss_values = []
+train_accuracy_values = []
+test_accuracy_values = []
+
+for epoch in range(num_epochs):
+    # Training phase
+    model.train()
+    epoch_train_loss = 0.0
+    correct_train = 0
+    total_train = 0
+    for inputs, labels in train_data_loader:
+        inputs, labels = inputs.to(device), labels.to(device)
+
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+
+        epoch_train_loss += loss.item()
+
+        _, predicted_train = torch.max(outputs.data, 1)
+        total_train += labels.size(0)
+        correct_train += (predicted_train == labels).sum().item()
+
+    epoch_train_loss /= len(train_data_loader)
+    train_loss_values.append(epoch_train_loss)
+    train_accuracy = 100 * correct_train / total_train
+    train_accuracy_values.append(train_accuracy)
+```
+- **Training Phase**:
+  - **Model Training Mode**: The model is set to training mode using `model.train()`.
+  - **Loss and Accuracy Calculation**: For each batch in the `train_data_loader`:
+    - Inputs and labels are moved to the device (GPU/CPU).
+    - **Forward Pass**: The model computes the output from the input.
+    - **Loss Calculation**: The loss is calculated using the `CrossEntropyLoss` criterion.
+    - **Backward Pass**: Gradients are computed and the optimizer updates the model's parameters.
+    - **Accuracy Calculation**: The predicted labels are compared with the true labels to calculate accuracy.
+
+---
+
+### 7. **Testing Loop**
+```python
+    # Testing phase
+    model.eval()
+    epoch_test_loss = 0.0
+    correct_test = 0
+    total_test = 0
+
+    with torch.no_grad():
+        for inputs, labels in test_data_loader:
+            inputs, labels = inputs.to(device), labels.to(device)
+
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            epoch_test_loss += loss.item()
+
+            _, predicted_test = torch.max(outputs.data, 1)
+            total_test += labels.size(0)
+            correct_test += (predicted_test == labels).sum().item()
+
+    epoch_test_loss /= len(test_data_loader)
+    test_loss_values.append(epoch_test_loss)
+    test_accuracy = 100 * correct_test / total_test
+    test_accuracy_values.append(test_accuracy)
+    scheduler.step(epoch_test_loss)
+```
+- **Testing Phase**:
+  - **Model Evaluation Mode**: The model is set to evaluation mode using `model.eval()`.
+  - **No Gradient Calculation**: `torch.no_grad()` disables gradient calculation, speeding up inference.
+  - **Loss and Accuracy Calculation**: Similar to the training phase, but no gradients are computed, and the model’s parameters remain unchanged.
+
+---
+
+### 8. **Saving the Model, Training Logs, and Plots**
+```python
+# Save the model, training logs, and plots
+output_folder1 = r"C:\ML\Models"
+output_folder2 = r"C:\ML\CSV"
+output_folder3 = r"C:\ML\Plots"
+
+os.makedirs(output_folder1, exist_ok=True)
+os.makedirs(output_folder2, exist_ok=True)
+os.makedirs(output_folder3, exist_ok=True)
+
+model_path = os.path.join(output_folder1, f"{model_name}_{ext}.pth")
+torch.save({
+    'model_state_dict': model.state_dict(),
+    'hyperparameters': {
+        'input_size': input_size,
+        'num_blocks': num_blocks,
+        'num_epochs': num_epochs,
+        'output_size': output_size,
+        'learning_rate': learning_Rate,
+        'batch_size': batch_Size,
+    }
+}, model_path)
+```
+- **Saving Model**: The trained model’s state dictionary and hyperparameters are saved using `torch.save` to a `.pth` file at the specified path.
+
+```python
+train_info = {'train_loss': train_loss_values,
+              'train_accuracy': train_accuracy_values,
+              'test_loss': test_loss_values,
+              'test_accuracy': test_accuracy_values}
+
+csv_path = os.path.join(output_folder2, f"{model_name}_{ext}.csv")
+train_info_df = pd.DataFrame(train_info)
+train_info_df.to_csv(csv_path, index=False)
+```
+- **Training Logs**: Training and testing losses and accuracies are saved to a CSV file for later analysis.
+
+```python
+# Plot loss and accuracy
+plt.figure(figsize=(12, 4))
+plt.subplot(2, 1, 1)
+plt.plot(range(1, num_epochs + 1), train_loss_values, label='Training Loss')
+plt.plot(range(1, num_epochs + 1), test_loss_values, label='Testing Loss')
+plt.title('Training and Testing Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.subplot(2, 1, 2)
+plt.plot(range(1, num_epochs + 1), train_accuracy_values, label='Training Accuracy')
+plt.plot(range(1, num_epochs + 1), test_accuracy_values, label='Testing Accuracy')
+plt.title('Training and Testing Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy (%)')
+plt.legend()
+
+png_path = os.path.join(output_folder3, f"{model_name}_{ext}.png")
+pdf_path = os.path.join(output_folder3, f"{model_name}_{ext}.pdf")
+plt.savefig(png_path, format='png', dpi=600)
+plt.savefig(pdf_path, format='pdf', dpi=600)
+```
+- **Plotting Loss and Accuracy**: The training and testing loss, as well as accuracy, are plotted using `matplotlib` and saved as PNG and PDF files.
+
+---
+
+### 9. **Output Summary**
+- The model, training logs, and plots are saved to specified directories for further analysis and future use.
+- **Training Progress**: Every 5 epochs, the loss and accuracy for both training and testing are printed.
+
+
+
 <div align="center">
   <a href="https://maazsalman.org/">
     <img width="70" src="click-svgrepo-com.svg" alt="gh" />
